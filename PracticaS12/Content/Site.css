@@ -1,0 +1,50 @@
+﻿/* Fondo con sutil patrón y colores intensos */
+body {
+    background-image: radial-gradient(ellipse at top left, rgba(255,0,119,.15), transparent 50%), radial-gradient(ellipse at bottom right, rgba(111,0,255,.15), transparent 50%);
+    background-attachment: fixed;
+}
+
+/* Tarjetas brillantes */
+.card-intense {
+    background: #121212;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.05);
+    border-radius: 1rem;
+}
+
+.badge-pendiente {
+    background: linear-gradient(90deg,#ff8a00,#ff2d55);
+}
+
+.badge-cancelado {
+    background: linear-gradient(90deg,#00c6ff,#0072ff);
+}
+
+.table thead th {
+    border-bottom: 2px solid rgba(255,255,255,.15) !important;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255,255,255,.04);
+}
+
+.btn-intense {
+    background: linear-gradient(90deg,#6f00ff,#ff0077);
+    border: none;
+    color: #fff;
+}
+
+    .btn-intense:hover {
+        filter: brightness(1.05);
+    }
+
+.form-control, .form-select {
+    background-color: #1b1b1b;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.15);
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #ff2d55;
+        box-shadow: 0 0 0 .25rem rgba(255,45,85,.25);
+    }

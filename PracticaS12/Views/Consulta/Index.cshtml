@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PracticaS12.Models.Principal>
+@{
+    ViewBag.Title = "Consulta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card card-intense">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="m-0"><i class="bi bi-list-ul me-2"></i>Consulta de Productos / Compras</h5>
+        <a class="btn btn-sm btn-intense" href="@Url.Action("Create","Abonos")">
+            <i class="bi bi-plus-lg me-1"></i> Registrar Abono
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Descripción</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-end">Saldo</th>
+                        <th class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var pendiente = item.Estado == "Pendiente";
+                        <tr>
+                            <td>#@item.IdCompra</td>
+                            <td>@item.Descripcion</td>
+                            <td class="text-end">@item.Precio.ToString("N5")</td>
+                            <td class="text-end fw-semibold">@item.Saldo.ToString("N5")</td>
+                            <td class="text-center">
+                                @if (pendiente)
+                                {<span class="badge rounded-pill badge-pendiente">Pendiente</span> }
+                                else
+                                { <span class="badge rounded-pill badge-cancelado">Cancelado</span>}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
