@@ -5,7 +5,7 @@
     ViewBag.Title = "Registrar Abono";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    // nunca null
+    
     var lista = (Model?.ComprasPendientes ?? new List<System.Web.Mvc.SelectListItem>()).ToList();
     var hayPendientes = lista.Any();
 }
@@ -18,7 +18,7 @@
             </div>
             <div class="card-body">
 
-                <!-- Diagnóstico (quita cuando verifiques) -->
+                
                 <div class="text-muted small mb-2">Compras pendientes encontradas: <strong>@lista.Count</strong></div>
 
                 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
@@ -43,8 +43,8 @@
                         @if (hayPendientes)
                         {
                             @Html.DropDownList(
-                                "IdCompra",                            // mismo name que la propiedad del VM
-                                lista,                                // IEnumerable<SelectListItem>
+                                "IdCompra",                            
+                                lista,                                
                                 "-- Seleccione una compra pendiente --",
                                 new { @class = "form-select", id = "ddlCompras", required = "required" }
                             )
