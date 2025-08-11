@@ -16,10 +16,10 @@ namespace PracticaS12.Controllers
         {
             var compras = db.Principal
                 .AsNoTracking()
-                .Where(p => p.Saldo > 0m)                
+                .Where(p => p.Saldo > 0m)
                 .OrderByDescending(p => p.IdCompra)
                 .Select(p => new { p.IdCompra, p.Descripcion, p.Saldo })
-                .ToList();                               
+                .ToList();
 
             return compras.Select(p => new SelectListItem
             {
@@ -28,15 +28,17 @@ namespace PracticaS12.Controllers
             }).ToList();
         }
 
+      
         public ActionResult Create()
         {
             var vm = new AbonoCreateViewModel
             {
                 ComprasPendientes = GetComprasPendientesSelectList()
             };
-            return View(vm);
+            return View("Create", vm); 
         }
 
+        
         [HttpGet]
         public ActionResult GetSaldo(long idCompra)
         {
@@ -45,26 +47,31 @@ namespace PracticaS12.Controllers
             return Json(new { saldo = compra.Saldo, descripcion = compra.Descripcion }, JsonRequestBehavior.AllowGet);
         }
 
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(AbonoCreateViewModel vm)
         {
             vm.ComprasPendientes = GetComprasPendientesSelectList();
-            if (!ModelState.IsValid) return View(vm);
+            if (!ModelState.IsValid) return View("Create", vm);
 
             var compra = db.Principal.FirstOrDefault(p => p.IdCompra == vm.IdCompra);
-            if (compra == null) { ModelState.AddModelError("", "La compra seleccionada no existe."); return View(vm); }
-            if (compra.Saldo <= 0m) { ModelState.AddModelError("", "La compra no está pendiente."); return View(vm); }
-            if (vm.Monto > compra.Saldo) { ModelState.AddModelError("Monto", "El abono no puede ser mayor que el saldo anterior."); return View(vm); }
+            if (compra == null) { ModelState.AddModelError("", "La compra seleccionada no existe."); return View("Create", vm); }
+            if (compra.Saldo <= 0m) { ModelState.AddModelError("", "La compra no está pendiente."); return View("Create", vm); }
+            if (vm.Monto > compra.Saldo) { ModelState.AddModelError("Monto", "El abono no puede ser mayor que el saldo anterior."); return View("Create", vm); }
 
             db.Abonos.Add(new Abono { IdCompra = compra.IdCompra, Monto = vm.Monto, Fecha = DateTime.Now });
-
             compra.Saldo = Math.Round(compra.Saldo - vm.Monto, 5, MidpointRounding.AwayFromZero);
-            if (compra.Saldo <= 0m) { compra.Saldo = 0m; compra.Estado = "Cancelado"; }
-            else { compra.Estado = "Pendiente"; }
+            compra.Estado = (compra.Saldo <= 0m) ? "Cancelado" : "Pendiente";
+            if (compra.Saldo < 0m) compra.Saldo = 0m;
 
             db.SaveChanges();
             return RedirectToAction("Index", "Consulta");
         }
     }
+
 }
+
+ 
+
+
