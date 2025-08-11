@@ -14,9 +14,11 @@ namespace PracticaS12.Controllers
         public ActionResult Index()
         {
             var data = db.Principal
-                .OrderByDescending(p => p.Estado == "Pendiente")
-                .ThenByDescending(p => p.IdCompra)
-                .ToList();
+    .AsNoTracking()
+    .OrderByDescending(p => p.Saldo > 0m) 
+    .ThenByDescending(p => p.IdCompra)
+    .ToList();
+
 
             return View(data);
         }

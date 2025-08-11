@@ -2,6 +2,10 @@
 @{
     ViewBag.Title = "Registrar Abono";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+  
+    var lista = Model?.ComprasPendientes ?? new List<System.Web.Mvc.SelectListItem>();
+    var hayPendientes = lista.Any();
 }
 
 <div class="row justify-content-center">
@@ -11,26 +15,63 @@
                 <h5 class="m-0"><i class="bi bi-wallet2 me-2"></i>Registro de Pago Parcial</h5>
             </div>
             <div class="card-body">
-                @using (Html.BeginForm("Create", "Abonos", FormMethod.Post, new { @id = "frmAbono", novalidate = "novalidate" }))
+
+                <div class="text-muted small mb-2">
+                    Compras pendientes encontradas: <strong>@lista.Count()</strong>
+                </div>
+
+                @if (!hayPendientes)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        No hay compras <strong>pendientes</strong> para abonar (Saldo &gt; 0).
+                        Primero crea una compra.
+                        <a class="btn btn-sm btn-intense ms-2" href="@Url.Action("Create","Compras")">
+                            <i class="bi bi-bag-plus me-1"></i> Crear compra
+                        </a>
+                    </div>
+                }
+
+                @using (Html.BeginForm("Create", "Abonos", FormMethod.Post, new { id = "frmAbono", novalidate = "novalidate" }))
                 {
                     @Html.AntiForgeryToken()
 
                     <div class="mb-3">
                         @Html.LabelFor(m => m.IdCompra, new { @class = "form-label" })
-                        @Html.DropDownListFor(m => m.IdCompra, Model.ComprasPendientes, "-- Seleccione una compra pendiente --",
-                            new { @class = "form-select", id = "ddlCompras", required = "required" })
-                        <div class="form-text">Solo se listan compras con estado <strong>Pendiente</strong>.</div>
+
+                        @Html.DropDownListFor(
+                            m => m.IdCompra,
+                            lista,                                   
+                            "-- Seleccione una compra pendiente --",
+                            new
+                                 {
+                                @class = "form-select",
+                                id = "ddlCompras",
+                                required = "required",
+                                
+                                @disabled = (!hayPendientes ? "disabled" : null)
+                            }
+                        )
+
+                        <div class="form-text">
+                            Solo se listan compras con <strong>Saldo &gt; 0</strong>.
+                        </div>
                         @Html.ValidationMessageFor(m => m.IdCompra, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="row g-3">
                         <div class="col-md-8">
                             <label class="form-label">Descripción</label>
-                            <input type="text" id="txtDescripcion" class="form-control" readonly />
+                            <input type="text" id="txtDescripcion" class="form-control" readonly @(hayPendientes ? null : "disabled") />
                         </div>
                         <div class="col-md-4">
                             @Html.LabelFor(m => m.SaldoAnterior, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.SaldoAnterior, new { @class = "form-control text-end", @readonly = "readonly", id = "txtSaldo" })
+                            @Html.TextBoxFor(m => m.SaldoAnterior, new
+                            {
+                                @class = "form-control text-end",
+                                @readonly = "readonly",
+                                id = "txtSaldo",
+                                @disabled = (!hayPendientes ? "disabled" : null)
+                            })
                         </div>
                     </div>
 
@@ -38,14 +79,24 @@
                         @Html.LabelFor(m => m.Monto, new { @class = "form-label" })
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
-                            @Html.TextBoxFor(m => m.Monto, new { @class = "form-control text-end", type = "number", step = "0.01", min = "0.01", placeholder = "0.00", required = "required", id = "txtMonto" })
+                            @Html.TextBoxFor(m => m.Monto, new
+                            {
+                                @class = "form-control text-end",
+                                type = "number",
+                                step = "0.01",
+                                min = "0.01",
+                                placeholder = "0.00",
+                                required = "required",
+                                id = "txtMonto",
+                                @disabled = (!hayPendientes ? "disabled" : null)
+                            })
                         </div>
                         @Html.ValidationMessageFor(m => m.Monto, "", new { @class = "text-danger" })
                         <div class="form-text">El abono no puede ser mayor que el saldo anterior.</div>
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-intense">
+                        <button type="submit" class="btn btn-intense" @(hayPendientes ? null : "disabled")>
                             <i class="bi bi-check2-circle me-1"></i> Abonar
                         </button>
                         <a href="@Url.Action("Index","Consulta")" class="btn btn-outline-light">
@@ -63,4 +114,11 @@
     </div>
 </div>
 
+@section scripts{
+    <script>
+    window.APP = window.APP || {};
+    APP.urls = { getSaldo: '@Url.Action("GetSaldo","Abonos")' };
+    </script>
+    <script src="~/Script/abonos-create.js"></script>
+}
 
