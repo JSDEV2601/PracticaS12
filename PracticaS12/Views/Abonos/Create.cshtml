@@ -14,12 +14,10 @@
     <div class="col-lg-8">
         <div class="card card-intense">
             <div class="card-header">
-                <h5 class="m-0"><i class="bi bi-wallet2 me-2"></i>Registro de Pago Parcial</h5>
+                <h5 class="m-0 text-white"><i class="bi bi-wallet2 me-2"></i>Registro de Pago Parcial</h5>
             </div>
             <div class="card-body">
-
-                
-                <div class="text-muted small mb-2">Compras pendientes encontradas: <strong>@lista.Count</strong></div>
+                <div class="text-white small mb-2">Compras pendientes encontradas: <strong class="text-danger">@lista.Count</strong></div>
 
                 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
@@ -38,7 +36,7 @@
                     @Html.AntiForgeryToken()
 
                     <div class="mb-3">
-                        @Html.Label("IdCompra", "Compra", new { @class = "form-label" })
+                        @Html.Label("IdCompra", "Compra", new { @class = "form-label text-white" })
 
                         @if (hayPendientes)
                         {
@@ -59,13 +57,13 @@
                             )
                         }
 
-                        <div class="form-text">Solo se listan compras con <strong>Saldo &gt; 0</strong>.</div>
+                        <div class="form-text text-white">Solo se listan compras con <strong>Saldo &gt; 0</strong>.</div>
                         @Html.ValidationMessage("IdCompra", "", new { @class = "text-danger" })
                     </div>
 
                     <div class="row g-3">
                         <div class="col-md-8">
-                            <label class="form-label">Descripción</label>
+                            <label class="form-label text-white">Descripción</label>
                             @if (hayPendientes)
                             {
                                 <input type="text" id="txtDescripcion" class="form-control" readonly />
@@ -77,7 +75,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            @Html.LabelFor(m => m.SaldoAnterior, new { @class = "form-label" })
+                            @Html.LabelFor(m => m.SaldoAnterior, new { @class = "form-label text-white" })
                             @if (hayPendientes)
                             {
                                 @Html.TextBoxFor(m => m.SaldoAnterior, new { @class = "form-control text-end", @readonly = "readonly", id = "txtSaldo" })
@@ -90,7 +88,7 @@
                     </div>
 
                     <div class="mt-3">
-                        @Html.LabelFor(m => m.Monto, new { @class = "form-label" })
+                        @Html.LabelFor(m => m.Monto, new { @class = "form-label text-white" })
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
                             @if (hayPendientes)
@@ -103,7 +101,7 @@
                             }
                         </div>
                         @Html.ValidationMessageFor(m => m.Monto, "", new { @class = "text-danger" })
-                        <div class="form-text">El abono no puede ser mayor que el saldo anterior.</div>
+                        <div class="form-text text-white">El abono no puede ser mayor que el saldo anterior.</div>
                     </div>
 
                     <div class="d-flex gap-2 mt-4">

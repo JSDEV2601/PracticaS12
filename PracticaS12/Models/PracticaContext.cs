@@ -8,9 +8,9 @@ namespace PracticaS12.Models
 {
     public class PracticaContext : DbContext
     {
-        public PracticaContext() : base("PracticaContext") { } 
+        public PracticaContext() : base("PracticaS12Entities") { } 
 
-        public DbSet<Principal> Principal { get; set; }
+        public DbSet<Principal> Principales { get; set; }
         public DbSet<Abono> Abonos { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
