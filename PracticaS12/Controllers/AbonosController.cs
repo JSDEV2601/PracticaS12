@@ -29,12 +29,24 @@ namespace PracticaS12.Controllers
         }
 
       
-        public ActionResult Create()
+        public ActionResult Create(long? IdCompra)
         {
             var vm = new AbonoCreateViewModel
             {
                 ComprasPendientes = GetComprasPendientesSelectList()
             };
+
+            if (IdCompra.HasValue)
+            {
+                var compra = db.Principales.FirstOrDefault(p => p.IdCompra == IdCompra.Value);
+                if (compra != null)
+                {
+                    vm.SaldoAnterior = compra.Saldo;
+                    vm.Descripcion = compra.Descripcion;
+                    vm.IdCompra = IdCompra.Value;
+                }
+            }
+
             return View("Create", vm); 
         }
 

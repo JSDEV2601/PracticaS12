@@ -31,42 +31,37 @@
                     </div>
                 }
 
-                @using (Html.BeginForm("Create", "Abonos", FormMethod.Post, new { id = "frmAbono", novalidate = "novalidate", autocomplete = "off" }))
+                @using (Html.BeginForm("Create", "Abonos", FormMethod.Get, new { id = "frmSeleccionCompra" }))
                 {
-                    @Html.AntiForgeryToken()
-
                     <div class="mb-3">
                         @Html.Label("IdCompra", "Compra", new { @class = "form-label text-white" })
 
                         @if (hayPendientes)
                         {
-                            @Html.DropDownList(
-                                "IdCompra",                            
-                                lista,                                
-                                "-- Seleccione una compra pendiente --",
-                                new { @class = "form-select", id = "ddlCompras", required = "required" }
-                            )
+                            @Html.DropDownListFor(m => m.IdCompra, lista, "-- Seleccione una compra pendiente --", new { @class = "form-select", id = "ddlCompras", required = "required", onchange = "this.form.submit();" })
                         }
                         else
                         {
-                            @Html.DropDownList(
-                                "IdCompra",
-                                lista,
-                                "-- Seleccione una compra pendiente --",
-                                new { @class = "form-select", id = "ddlCompras", required = "required", disabled = "disabled" }
-                            )
+                            @Html.DropDownList("IdCompra", lista, "-- Seleccione una compra pendiente --", new { @class = "form-select", id = "ddlCompras", required = "required", disabled = "disabled" })
                         }
 
                         <div class="form-text text-white">Solo se listan compras con <strong>Saldo &gt; 0</strong>.</div>
                         @Html.ValidationMessage("IdCompra", "", new { @class = "text-danger" })
                     </div>
+                }
+
+                @using (Html.BeginForm("Create", "Abonos", FormMethod.Post, new { id = "frmAbono", novalidate = "novalidate", autocomplete = "off" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(m => m.IdCompra)
 
                     <div class="row g-3">
                         <div class="col-md-8">
                             <label class="form-label text-white">Descripción</label>
                             @if (hayPendientes)
                             {
-                                <input type="text" id="txtDescripcion" class="form-control" readonly />
+                                <input type="text" id="txtDescripcion" class="form-control" readonly value="@Model.Descripcion" />
                             }
                             else
                             {
