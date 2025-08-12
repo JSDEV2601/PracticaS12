@@ -14,7 +14,7 @@ namespace PracticaS12.Controllers
 
         private List<SelectListItem> GetComprasPendientesSelectList()
         {
-            var compras = db.Principal
+            var compras = db.Principales
                 .AsNoTracking()
                 .Where(p => p.Saldo > 0m)
                 .OrderByDescending(p => p.IdCompra)
@@ -42,7 +42,7 @@ namespace PracticaS12.Controllers
         [HttpGet]
         public ActionResult GetSaldo(long idCompra)
         {
-            var compra = db.Principal.AsNoTracking().FirstOrDefault(p => p.IdCompra == idCompra);
+            var compra = db.Principales.AsNoTracking().FirstOrDefault(p => p.IdCompra == idCompra);
             if (compra == null) return HttpNotFound();
             return Json(new { saldo = compra.Saldo, descripcion = compra.Descripcion }, JsonRequestBehavior.AllowGet);
         }
@@ -55,7 +55,7 @@ namespace PracticaS12.Controllers
             vm.ComprasPendientes = GetComprasPendientesSelectList();
             if (!ModelState.IsValid) return View("Create", vm);
 
-            var compra = db.Principal.FirstOrDefault(p => p.IdCompra == vm.IdCompra);
+            var compra = db.Principales.FirstOrDefault(p => p.IdCompra == vm.IdCompra);
             if (compra == null) { ModelState.AddModelError("", "La compra seleccionada no existe."); return View("Create", vm); }
             if (compra.Saldo <= 0m) { ModelState.AddModelError("", "La compra no está pendiente."); return View("Create", vm); }
             if (vm.Monto > compra.Saldo) { ModelState.AddModelError("Monto", "El abono no puede ser mayor que el saldo anterior."); return View("Create", vm); }

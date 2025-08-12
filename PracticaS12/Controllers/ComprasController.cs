@@ -31,7 +31,7 @@ namespace PracticaS12.Controllers
                 Estado = "Pendiente"
             };
 
-            db.Principal.Add(compra);
+            db.Principales.Add(compra);
             db.SaveChanges();
 
             TempData["Ok"] = "Compra registrada correctamente. Ya puedes registrar un abono.";
